@@ -6,7 +6,6 @@ use Slim\Factory\AppFactory;
 $app = AppFactory::create();
 $app->addRoutingMiddleware();
 
-
 //Get All Records
 $app->get('/students', function (Request $request, Response $response, array $args) {
     $db = new DB();
@@ -149,10 +148,4 @@ $app->delete('/students/delete/{id}', function (Request $request, Response $resp
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-$app->add(function ($request, $handler) {
-    $response = $handler->handle($request);
-    return $response
-            ->withHeader('Access-Control-Allow-Origin', '*')
-            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-});
+
