@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Finals</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA==" crossorigin="anonymous" referrerpolicy="no-referrer" />  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css" integrity="sha512-SgaqKKxJDQ/tAUAAXzvxZz33rmn7leYDYfBP+YoMRSENhf3zJyx3SBASt/OfeQwBHA1nxMis7mM3EV/oYT6Fdw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <header>
+        <h2 class="text-center text-light">Student</h2>
+    </header>
+
+    <main>
+        <div class="container shadow mt-5 p-3 ">
+            <h3>Student Details</h3>
+            <form action="/" method="POST" class="needs-validation" novalidate>
+                <div class="form-row mx-3">
+                    <div class="col-md-6 mb-3 font-weight-bold">
+                        <label for="studid" class="form-label">ID</label>
+                        <input type="text" class="form-control w-25" id="studid" readonly>
+                    </div>
+
+                    <div class="col-md-6 mb-3 font-weight-bold">
+                        <!--FILLER-->
+                    </div>
+
+                    <div class="col-md-6 mb-3 font-weight-bold">
+                        <label for="name2" class="required">Name</label>
+                        <input type="text" class="form-control" id="name2" name="name2"required>
+                    </div>
+
+                    <div class="col-md-6 mb-3 font-weight-bold">
+                        <label for="course2" class="required">Course</label>
+                        <select id="course2" class="form-select form-control" aria-label="Default" required>
+                            <option value="" selected disabled>Select Course</option>
+                            <option value="BSBA">BSBA</option>
+                            <option value="BSED">BSED</option>
+                            <option value="BSTM">BSTM</option>
+                            <option value="BSIT">BSIT</option>
+                            <option value="BSHM">BSHM</option>
+                            <option value="BSA">BSA</option>
+                            <option value="BSBA">BSBA</option>
+                            <option value="BSCRIM">BSCRIM</option>
+                            <option value="BEED">BEED</option>
+                            <option value="PolSci">PolSci</option>
+                          </select>
+                        <div class="invalid-feedback">Course is required.</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success button-add" name="submit" onclick="updateRecord()">UPDATE</button>
+                    <button type="submit" class="btn btn-danger button-add" name="submit" onclick="deleteRecord()">DELETE</button>
+                </div>
+            </form>
+        </div>
+    </main>
+   
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+        Gerico S. Yutuc
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.js" integrity="sha512-6DC1eE3AWg1bgitkoaRM1lhY98PxbMIbhgYCGV107aZlyzzvaWCW1nJW2vDuYQm06hXrW0As6OGKcIaAVWnHJw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <script>
+        const queryString = window.location.search; // Returns:'?id=1' in HTML URL
+        const params = new URLSearchParams(queryString); // Search URL paramerter
+        const id = params.get("id");
+
+        $(document).ready(function() {
+            $.ajax({
+                url: `http://finals-api.test/students/${id}`,
+                type: "GET", 
+                success: function(response) {
+                    document.getElementById("studid").value = response[0].id;
+                    document.getElementById("name2").value = response[0].name;
+                    document.getElementById("course2").value = response[0].course;
+                },
+                error: function(xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");                    
+                    console.log(err.Message);
+                }
+            })
+        });
+
+        function updateRecord(){
+            const studid = document.getElementById("studid").value
+            var data = {
+                name : document.getElementById("name2").value,
+                course : document.getElementById("course2").value,
+            };
+            $.ajax({
+                url: `http://finals-api.test/students/update/${id}`,
+                type: "PUT",
+                data: JSON.stringify(data),
+                success: function(response) {
+                window.location.href = 'index.html';
+                },
+            });
+        }
+
+        function deleteRecord() {
+            const studid = document.getElementById("studid").value
+            $.ajax({
+                url: `http://finals-api.test/students/delete/${id}`,
+                type: "DELETE",
+                success: function(response) {
+                window.location.href = 'index.html';
+                },
+            });
+        }
+    </script>
+  </body>
+</html>
